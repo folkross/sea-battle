@@ -6,4 +6,10 @@ window = Window()
 form = Form()
 form.setupUi(window)
 window.show()
+
+def exit_game():
+	exit()
+
+form.pushButton_3.clicked.connect(exit_game)
+
 app.exec_()
