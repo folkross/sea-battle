@@ -1,1 +1,0 @@
-pyuic5.exe -x D:\Программы\Новая папка\sea-battle\tracker.ui -o D:\Программы\Новая папка\sea-battle\tracker.py
