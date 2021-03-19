@@ -1,5 +1,9 @@
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication
+
+
+
 Form, Window = uic.loadUiType("tracker.ui")
 app = QApplication([])
 window = Window()
@@ -12,4 +16,10 @@ def exit_game():
 
 form.pushButton_3.clicked.connect(exit_game)
 
+
+
+
 app.exec_()
+
+
+
