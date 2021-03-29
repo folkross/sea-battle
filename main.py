@@ -18,11 +18,11 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, \
 from PyQt5 import QtCore, QtGui, QtMultimedia, QtWidgets
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer, QSound, QSoundEffect 
 
-
+global background_image
 pygame.init()
 pygame.mixer.music.load("sounds/background.wav")
 pygame.mixer.music.play(-1)
-
+background_image = "1"
 
 
 class StartMenuMain(QMainWindow, Ui_MainWindow_startmenu):
@@ -33,7 +33,15 @@ class StartMenuMain(QMainWindow, Ui_MainWindow_startmenu):
         self.setupUi(self)
         self.LOGOSB = QPixmap("images/logo.svg")  
         
-        self.setStyleSheet('.QWidget {background-image: url(images/10321.jpg);}')
+        
+        if background_image == "1":
+            self.setStyleSheet('.QWidget {border-image: url(images/10321.jpg);}')
+        elif background_image == "2":
+            self.setStyleSheet('.QWidget {border-image: url(images/4321.jpeg);}')
+        elif background_image == "3":
+            self.setStyleSheet('.QWidget {border-image: url(images/5455.jpg);}')
+        elif background_image == "4":
+            self.setStyleSheet('.QWidget {border-image: url(images/124432.jpg);}')
 
         self.initUI()
 
@@ -79,13 +87,16 @@ class StartMenuMain(QMainWindow, Ui_MainWindow_startmenu):
 class SettingsMain(QMainWindow, Ui_MainWindow_settings):
     """Меню настроек"""
 
+    
+
     def __init__(self, parent=None):
         super(SettingsMain, self).__init__(parent)
         self.setupUi(self)
         self.horizontalSlider.valueChanged.connect(self.volume_level) 
-        self.setStyleSheet('.QWidget {background-image: url(images/10321.jpg);}')
+        self.setStyleSheet('.QWidget {border-image: url(images/10321.jpg);}')
         self.initUI()
         
+
 
     def volume_level(self): # Регулировка звука
         new_value = str(self.horizontalSlider.value())
@@ -104,7 +115,23 @@ class SettingsMain(QMainWindow, Ui_MainWindow_settings):
             pygame.mixer.music.set_volume(1)
        
            
-                         
+    def background1(self):
+        background_image = "1"
+        self.setStyleSheet('.QWidget {border-image: url(images/10321.jpg);}')
+
+    def background2(self):
+        background_image = "2"
+        self.setStyleSheet('.QWidget {border-image: url(images/4321.jpeg);}')
+
+    def background3(self):
+        background_image = "3"
+        self.setStyleSheet('.QWidget {border-image: url(images/5455.jpg);}')
+
+    def background4(self):
+        background_image = "4"
+        self.setStyleSheet('.QWidget {border-image: url(images/124432.jpg);}')
+
+    
 
 
     def initUI(self):
@@ -117,6 +144,11 @@ class SettingsMain(QMainWindow, Ui_MainWindow_settings):
 
 
         self.backButton.clicked.connect(self.to_start)
+
+        self.pushButton_3.clicked.connect(self.background1)
+        self.pushButton_4.clicked.connect(self.background2)
+        self.pushButton.clicked.connect(self.background3)
+        self.pushButton_2.clicked.connect(self.background4)
 
 
 
@@ -137,7 +169,7 @@ class RulesMain(QMainWindow, Ui_MainWindow_rules):
         super(RulesMain, self).__init__(parent)
         self.setupUi(self)
         self.LOGOSB = QPixmap("images/logo.svg")
-        self.setStyleSheet('.QWidget {background-image: url(images/10321.jpg);}')
+        self.setStyleSheet('.QWidget {border-image: url(images/10321.jpg);}')
         self.initUI()
 
     def initUI(self):
