@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>960</width>
-    <height>540</height>
+    <width>1067</width>
+    <height>743</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,57 +43,8 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="6">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item alignment="Qt::AlignLeft">
-       <widget class="QPushButton" name="backButton">
-        <property name="font">
-         <font>
-          <pointsize>24</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>&lt;----- Back</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="logoImage">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="4">
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
     <item row="4" column="4">
      <spacer name="verticalSpacer_7">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="7" column="4">
-     <spacer name="verticalSpacer_6">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -118,8 +69,57 @@
       </property>
      </spacer>
     </item>
-    <item row="8" column="4">
+    <item row="12" column="4">
      <spacer name="verticalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="0" colspan="6">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item alignment="Qt::AlignLeft">
+       <widget class="QPushButton" name="backButton">
+        <property name="font">
+         <font>
+          <pointsize>24</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>&lt;----- Back</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="logoImage">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="10" column="4">
+     <spacer name="verticalSpacer_6">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="2" column="4">
+     <spacer name="verticalSpacer_2">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -157,6 +157,26 @@
       </property>
      </spacer>
     </item>
+    <item row="5" column="4">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Настройка звука</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="4">
+     <spacer name="verticalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
     <item row="6" column="1">
      <spacer name="verticalSpacer">
       <property name="orientation">
@@ -170,23 +190,31 @@
       </property>
      </spacer>
     </item>
-    <item row="9" column="4">
-     <spacer name="verticalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="5" column="4">
-     <widget class="QLabel" name="label">
+    <item row="12" column="2">
+     <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>Настройка звука</string>
+       <string>Третий фон</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="3">
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>Четвертый фон</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QPushButton" name="pushButton_3">
+      <property name="text">
+       <string>Первый фон</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3">
+     <widget class="QPushButton" name="pushButton_4">
+      <property name="text">
+       <string>Второй фон</string>
       </property>
      </widget>
     </item>
