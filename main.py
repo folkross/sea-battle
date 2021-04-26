@@ -3,7 +3,7 @@ from UI.startmenu import Ui_MainWindow_startmenu
 from UI.rules import Ui_MainWindow_rules
 from UI.readygame import Ui_MainWindow_ready
 from UI.gamepvp import Ui_MainWindow_pvp
-
+from UI.win import Ui_MainWindow_win
 
 import sys
 from random import randrange
@@ -599,9 +599,7 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         self.pixmap_torped_red = self.pixmap_torped_red.scaled(60, 30)
 
         self.turn = "Player1"  # Очередь первого игрока
-        # Подсказки
-        self.tableWidget.setToolTip("Your board")
-        self.tableWidget_2.setToolTip("Not your board")
+
 
         self.map1 = SeaMap(self.tableWidget)
         self.map2 = SeaMap(self.tableWidget_2)
@@ -631,7 +629,6 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         self.kreyserP2.setPixmap(self.pixmap_kreyser_red)
         self.esminecP2.setPixmap(self.pixmap_esminec_red)
         self.torpedP2.setPixmap(self.pixmap_torped_red)
-
 
 
     def new_boards(self):
@@ -673,6 +670,9 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
     def info(self, text="Координаты правельные"):  # Информационное табло
         QMessageBox.information(self, "INFO", text)
 
+    def error(self, text="Вы уже стреляли в эту клетку."):  # Вызов ошибки
+        QMessageBox.critical(self, 'Ошибка!', text)
+
     def check(self):
         if all(players[1].board[i][j] == 0 for i in range(10) for j in range(10)):
             self.info(f"Выиграл {self.turn}!")
@@ -686,6 +686,9 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         self.course(c1, c2, 2)
 
     def course(self, r, c, num):  # Ход
+        if str(self.tableWidget.item(r, c).text()) == "*" or str(self.tableWidget.item(r, c).text()) == "X" :
+            self.error()
+            return
         if self.turn[-1] == '1' and num == 2 or self.turn[-1] == '2' and num == 1:
             flag = True
             coord = (r, c)
