@@ -81,6 +81,8 @@ class Ui_MainWindow_settings(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Settings"))
@@ -90,6 +92,7 @@ class Ui_MainWindow_settings(object):
         self.pushButton_2.setText(_translate("MainWindow", "Четвертый фон"))
         self.pushButton_3.setText(_translate("MainWindow", "Первый фон"))
         self.pushButton_4.setText(_translate("MainWindow", "Второй фон"))
+
 
 
 if __name__ == "__main__":
