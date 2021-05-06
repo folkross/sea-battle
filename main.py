@@ -3,7 +3,7 @@ from UI.startmenu import Ui_MainWindow_startmenu
 from UI.rules import Ui_MainWindow_rules
 from UI.readygame import Ui_MainWindow_ready
 from UI.gamepvp import Ui_MainWindow_pvp
-
+from UI.win import Ui_MainWindow_win
 
 import sys
 from random import randrange
@@ -686,14 +686,21 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         self.course(c1, c2, 2)
 
     def course(self, r, c, num):  # Ход
-        if str(self.tableWidget.item(r, c).text()) == "*" or str(self.tableWidget.item(r, c).text()) == "X" :
-            self.error()
-            return
         if self.turn[-1] == '1' and num == 2 or self.turn[-1] == '2' and num == 1:
             flag = True
             coord = (r, c)
         else:
             flag = False
+
+        if num == 1:
+            if str(self.tableWidget.item(r, c).text()) == "*" or str(self.tableWidget.item(r, c).text()) == "X" :
+                self.error()
+                return
+        else:
+            if str(self.tableWidget_2.item(r, c).text()) == "*" or str(self.tableWidget_2.item(r, c).text()) == "X" :
+                self.error()
+                return
+
         if flag:
             if self.dot_or_notdot((r, c)):
                 if any(self.hasOne((r, c), shift)
