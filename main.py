@@ -3,7 +3,7 @@ from UI.startmenu import Ui_MainWindow_startmenu
 from UI.rules import Ui_MainWindow_rules
 from UI.readygame import Ui_MainWindow_ready
 from UI.gamepvp import Ui_MainWindow_pvp
-from UI.win import Ui_MainWindow_win
+
 
 import sys
 from random import randrange
