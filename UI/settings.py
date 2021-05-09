@@ -88,10 +88,10 @@ class Ui_MainWindow_settings(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Settings"))
         self.backButton.setText(_translate("MainWindow", "Назад"))
         self.label.setText(_translate("MainWindow", "Настройка звука"))
-        self.pushButton.setText(_translate("MainWindow", "Третий фон"))
-        self.pushButton_2.setText(_translate("MainWindow", "Четвертый фон"))
-        self.pushButton_3.setText(_translate("MainWindow", "Первый фон"))
-        self.pushButton_4.setText(_translate("MainWindow", "Второй фон"))
+        self.pushButton.setText(_translate("MainWindow", "1280 X 720"))
+        self.pushButton_2.setText(_translate("MainWindow", "1920 X 1080"))
+        self.pushButton_3.setText(_translate("MainWindow", "800 X 600"))
+        self.pushButton_4.setText(_translate("MainWindow", "960 X 540"))
 
 
 
