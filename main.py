@@ -665,8 +665,6 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
             self.board1Label.setStyleSheet("background-color: #B22222")
             self.board2Label.setStyleSheet("background-color: #1E90FF")
             players[0], players[1] = players[1], players[0]
-            self.tableWidget.setToolTip("Not your board")
-            self.tableWidget_2.setToolTip("Your board")
         elif self.turn == "Игрок2":
             self.board1Label.setPixmap(self.pixmap_your_green)
             self.board2Label.setPixmap(self.pixmap_enemy_red)
