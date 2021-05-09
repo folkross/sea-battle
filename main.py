@@ -19,6 +19,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, \
     QStackedWidget, QMessageBox, QInputDialog, QTableWidgetItem, QAction
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer, QSound
+from PyQt5 import QtWidgets
 
 
 COORDS = {
@@ -124,6 +125,7 @@ COORDS = {
     "J10": (9, 9),
 }
 players = []
+SCREEN_SIZE = [(800,600), (960, 540), (1280, 720), (1920, 1080), (1000, 700)]
 
 
 
@@ -222,19 +224,19 @@ class SettingsMain(QMainWindow, Ui_MainWindow_settings,Ui_MainWindow_startmenu):
     
     def background1(self):
         background_image = "1"
-        self.setStyleSheet('.QWidget {border-image: url(images/10321.jpg);}')
+        windows.resize(*SCREEN_SIZE[0])
 
     def background2(self):
         
-        self.setStyleSheet('.QWidget {border-image: url(images/4321.jpeg);}')
+        windows.resize(*SCREEN_SIZE[1])
 
     def background3(self):
         background_image = "3"
-        self.setStyleSheet('.QWidget {border-image: url(images/5455.jpg);}')
+        windows.resize(*SCREEN_SIZE[4])
 
     def background4(self):
         background_image = "4"
-        self.setStyleSheet('.QWidget {border-image: url(images/124432.jpg);}')
+        windows.resize(*SCREEN_SIZE[3])
 
     def __init__(self, parent=None):
         super(SettingsMain, self).__init__(parent)
@@ -284,7 +286,7 @@ class SettingsMain(QMainWindow, Ui_MainWindow_settings,Ui_MainWindow_startmenu):
         self.pushButton.clicked.connect(self.background3)
         self.pushButton_2.clicked.connect(self.background4)
 
-
+        self.label.setStyleSheet("background-color: #ffffff")
 
     
 
@@ -362,12 +364,10 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
                                        "border-radius: 10px;")
 
 
-
         self.linkorButton.clicked.connect(self.setLinkor)
         self.kreyserButton.clicked.connect(self.setKreyser)
         self.esminecButton.clicked.connect(self.setEsminec)
         self.torpedButton.clicked.connect(self.setTorped)
-
 
 
     def new_map(self):  # Метод создаёт(обновляет) карту
@@ -376,6 +376,10 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
                 self.boardMap.setItem(i, j, new_cell_dot())
         self.boardMap.resizeColumnsToContents()
         self.boardMap.resizeRowsToContents()
+
+        self.boardMap.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+        self.boardMap.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
     def new_db(self, who):  # Занесения данных в базу данных
         self.con = sqlite3.connect("Players.db")
@@ -575,7 +579,6 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
     def __init__(self, parent=None):
         super(PVPMain, self).__init__(parent)
         self.setupUi(self)
-        self.setStyleSheet('.QWidget {border-image: url(images/4321.jpeg);}')
         self.pixmap_your_green = QPixmap("images/your_board_green.svg")
         self.pixmap_your_red = QPixmap("images/your_board_red.svg")
         self.pixmap_enemy_green = QPixmap("images/enemys_board_green.svg")
@@ -598,7 +601,7 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         self.pixmap_esminec_red = self.pixmap_esminec_red.scaled(60, 30)
         self.pixmap_torped_red = self.pixmap_torped_red.scaled(60, 30)
 
-        self.turn = "Player1"  # Очередь первого игрока
+        self.turn = "Игрок1"  # Очередь первого игрока
 
 
         self.map1 = SeaMap(self.tableWidget)
@@ -631,6 +634,15 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         self.torpedP2.setPixmap(self.pixmap_torped_red)
 
 
+        self.tableWidget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+        self.tableWidget.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+
+        self.tableWidget_2.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+        self.tableWidget_2.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
     def new_boards(self):
         for i in range(self.tableWidget.columnCount()):
             for j in range(self.tableWidget.rowCount()):
@@ -644,10 +656,10 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         self.tableWidget_2.resizeRowsToContents()
 
     def change_of_course(self):  # Смена хода
-        if self.turn == "Player1":
+        if self.turn == "Игрок1":
             self.board1Label.setPixmap(self.pixmap_enemy_green)
             self.board2Label.setPixmap(self.pixmap_your_red)
-            self.turn = "Player2"
+            self.turn = "Игрок2"
             self.board1Label.setText("Игрок 1")
             self.board2Label.setText("Игрок 2")
             self.board1Label.setStyleSheet("background-color: #B22222")
@@ -655,17 +667,16 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
             players[0], players[1] = players[1], players[0]
             self.tableWidget.setToolTip("Not your board")
             self.tableWidget_2.setToolTip("Your board")
-        elif self.turn == "Player2":
+        elif self.turn == "Игрок2":
             self.board1Label.setPixmap(self.pixmap_your_green)
             self.board2Label.setPixmap(self.pixmap_enemy_red)
-            self.turn = "Player1"
+            self.turn = "Игрок1"
             self.board1Label.setText("Игрок 1")
             self.board2Label.setText("Игрок 2")
             self.board1Label.setStyleSheet("background-color: #B22222")
             self.board2Label.setStyleSheet("background-color: #1E90FF")
             players[0], players[1] = players[1], players[0]
-            self.tableWidget.setToolTip("Your board")
-            self.tableWidget_2.setToolTip("Not your board")
+
 
     def info(self, text="Координаты правельные"):  # Информационное табло
         QMessageBox.information(self, "INFO", text)
@@ -676,7 +687,7 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
     def check(self):
         if all(players[1].board[i][j] == 0 for i in range(10) for j in range(10)):
             self.info(f"Выиграл {self.turn}!")
-            windows.setCurrentIndex(0)
+            windows.setCurrentIndex(5)
             return
 
     def course1(self, c1, c2):
@@ -754,10 +765,28 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         y += dy
         if 0 <= x < 10 and 0 <= y < 10:
             if players[1].board[x][y] == 1:
-                return True
+                if players[1].board[x-1][y-1] == 0:
+                    if players[1].board[x+1][y+1] == 0:
+                        if players[1].board[x-1][y] == 0:
+                            return True
         return False
 
 
+class WinMain(QMainWindow, Ui_MainWindow_win):  
+    """Меню выиграша"""
+
+    def __init__(self, parent=None):
+        super(WinMain, self).__init__(parent)
+        self.setupUi(self)
+        self.LOGO = QPixmap("images/logo.svg")
+        self.initUI()
+        self.setStyleSheet('.QWidget {border-image: url(images/4321.jpeg);}')
+
+    def initUI(self):
+        self.pushButton.clicked.connect(QCoreApplication.instance().quit)
+        self.pushButton.setStyleSheet("color: white; background-color: #082567;"
+                                      "border-radius: 20px;")
+        self.label_2.setPixmap(self.LOGO)
 
 
 class Player:
@@ -817,7 +846,7 @@ if __name__ == '__main__':
     rules_window = RulesMain()
     ready_window = ReadyMain()
     pvp_window = PVPMain()
-
+    win_window = WinMain()
 
     windows = QStackedWidget()
 
@@ -826,7 +855,7 @@ if __name__ == '__main__':
     windows.addWidget(rules_window)  # 2
     windows.addWidget(ready_window)  # 3
     windows.addWidget(pvp_window)  # 4
-
+    windows.addWidget(win_window)  # 5
 
     windows.setWindowTitle("Морской бой")
     windows.show()
