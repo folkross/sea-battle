@@ -8,7 +8,7 @@ from UI.win import Ui_MainWindow_win
 import sys
 from random import randrange
 import sqlite3
-
+import re
 import pygame
 import pygame as pg
 
@@ -21,109 +21,10 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer, QSound
 from PyQt5 import QtWidgets
 
+def natural_key(string_):
+    return [int(s) if s.isdigit() else s for s in re.split(r'(\d+)', string_)]
 
-COORDS = {
-    "A1": (0, 0),
-    "A2": (1, 0),
-    "A3": (2, 0),
-    "A4": (3, 0),
-    "A5": (4, 0),
-    "A6": (5, 0),
-    "A7": (6, 0),
-    "A8": (7, 0),
-    "A9": (8, 0),
-    "A10": (9, 0),
-    "B1": (0, 1),
-    "B2": (1, 1),
-    "B3": (2, 1),
-    "B4": (3, 1),
-    "B5": (4, 1),
-    "B6": (5, 1),
-    "B7": (6, 1),
-    "B8": (7, 1),
-    "B9": (8, 1),
-    "B10": (9, 1),
-    "C1": (0, 2),
-    "C2": (1, 2),
-    "C3": (2, 2),
-    "C4": (3, 2),
-    "C5": (4, 2),
-    "C6": (5, 2),
-    "C7": (6, 2),
-    "C8": (7, 2),
-    "C9": (8, 2),
-    "C10": (9, 2),
-    "D1": (0, 3),
-    "D2": (1, 3),
-    "D3": (2, 3),
-    "D4": (3, 3),
-    "D5": (4, 3),
-    "D6": (5, 3),
-    "D7": (6, 3),
-    "D8": (7, 3),
-    "D9": (8, 3),
-    "D10": (9, 3),
-    "E1": (0, 4),
-    "E2": (1, 4),
-    "E3": (2, 4),
-    "E4": (3, 4),
-    "E5": (4, 4),
-    "E6": (5, 4),
-    "E7": (6, 4),
-    "E8": (7, 4),
-    "E9": (8, 4),
-    "E10": (9, 4),
-    "F1": (0, 5),
-    "F2": (1, 5),
-    "F3": (2, 5),
-    "F4": (3, 5),
-    "F5": (4, 5),
-    "F6": (5, 5),
-    "F7": (6, 5),
-    "F8": (7, 5),
-    "F9": (8, 5),
-    "F10": (9, 5),
-    "G1": (0, 6),
-    "G2": (1, 6),
-    "G3": (2, 6),
-    "G4": (3, 6),
-    "G5": (4, 6),
-    "G6": (5, 6),
-    "G7": (6, 6),
-    "G8": (7, 6),
-    "G9": (8, 6),
-    "G10": (9, 6),
-    "H1": (0, 7),
-    "H2": (1, 7),
-    "H3": (2, 7),
-    "H4": (3, 7),
-    "H5": (4, 7),
-    "H6": (5, 7),
-    "H7": (6, 7),
-    "H8": (7, 7),
-    "H9": (8, 7),
-    "H10": (9, 7),
-    "I1": (0, 8),
-    "I2": (1, 8),
-    "I3": (2, 8),
-    "I4": (3, 8),
-    "I5": (4, 8),
-    "I6": (5, 8),
-    "I7": (6, 8),
-    "I8": (7, 8),
-    "I9": (8, 8),
-    "I10": (9, 8),
-    "J1": (0, 9),
-    "J2": (1, 9),
-    "J3": (2, 9),
-    "J4": (3, 9),
-    "J5": (4, 9),
-    "J6": (5, 9),
-    "J7": (6, 9),
-    "J8": (7, 9),
-    "J9": (8, 9),
-    "J10": (9, 9),
-}
+COORDS = dict(("ABCDEFGHIJ"[x]+str(y+1), (y, x)) for x in range(10) for y in range(10))
 players = []
 SCREEN_SIZE = [(800,600), (960, 540), (1280, 720), (1920, 1080), (1000, 700)]
 
@@ -336,7 +237,7 @@ class RulesMain(QMainWindow, Ui_MainWindow_rules):
 
 class ReadyMain(QMainWindow, Ui_MainWindow_ready):
     """Меню подготовления к самой игре"""
-    
+
     def __init__(self, parent=None):             
         super(ReadyMain, self).__init__(parent)
         self.setupUi(self)
@@ -349,26 +250,35 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
         self.initUI()
 
     def initUI(self):
-        self.readyButton.clicked.connect(self.start)
-
         # Задаю цвет и форму кнопкам
+        for w in [self.linkorButton, self.kreyserButton, self.esminecButton, self.torpedButton]:
+            w.setStyleSheet("color: white; background-color: #b6afa9;"
+                            "border-radius: 10px;")
+        self.torpedButton.clicked.connect(self.setShip)
+        self.esminecButton.clicked.connect(self.setShip2)
+        self.kreyserButton.clicked.connect(self.setShip3)
+        self.linkorButton.clicked.connect(self.setShip4)
+
         self.readyButton.setStyleSheet("color: white; background-color: #b6afa9;"
                                        "border-radius: 10px;")
-        self.linkorButton.setStyleSheet("color: white; background-color: #b6afa9;"
-                                       "border-radius: 10px;")
-        self.kreyserButton.setStyleSheet("color: white; background-color: #b6afa9;"
-                                       "border-radius: 10px;")
-        self.esminecButton.setStyleSheet("color: white; background-color: #b6afa9;"
-                                       "border-radius: 10px;")
-        self.torpedButton.setStyleSheet("color: white; background-color: #b6afa9;"
-                                       "border-radius: 10px;")
+        self.readyButton.clicked.connect(self.start)
 
 
-        self.linkorButton.clicked.connect(self.setLinkor)
-        self.kreyserButton.clicked.connect(self.setKreyser)
-        self.esminecButton.clicked.connect(self.setEsminec)
-        self.torpedButton.clicked.connect(self.setTorped)
+    def new_images(self, who):  # Создание(обновление) изображений
+        self.pixmap_linkor = QPixmap(f"images/Linkor_{who}.svg")
+        self.pixmap_kreyser = QPixmap(f"images/Kreyser_{who}.svg")
+        self.pixmap_esminec = QPixmap(f"images/Esminec_{who}.svg")
+        self.pixmap_torped = QPixmap(f"images/Torped_{who}.svg")
 
+        self.pixmap_linkor = self.pixmap_linkor.scaled(259, 110)
+        self.pixmap_kreyser = self.pixmap_kreyser.scaled(260, 110)
+        self.pixmap_esminec = self.pixmap_esminec.scaled(260, 110)
+        self.pixmap_torped = self.pixmap_torped.scaled(260, 110)
+
+        self.linkorImage.setPixmap(self.pixmap_linkor)
+        self.kreyserImage.setPixmap(self.pixmap_kreyser)
+        self.esminecImage.setPixmap(self.pixmap_esminec)
+        self.torpedImage.setPixmap(self.pixmap_torped)
 
     def new_map(self):  # Метод создаёт(обновляет) карту
         for i in range(self.boardMap.columnCount()):
@@ -389,54 +299,57 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
                          WHERE id={int(i[1:])}""")
         self.con.commit()
 
-    def new_images(self, who):  # Создание(обновление) изображений
-        self.pixmap_linkor = QPixmap(f"images/Linkor_{who}.svg")
-        self.pixmap_kreyser = QPixmap(f"images/Kreyser_{who}.svg")
-        self.pixmap_esminec = QPixmap(f"images/Esminec_{who}.svg")
-        self.pixmap_torped = QPixmap(f"images/Torped_{who}.svg")
-
-        self.pixmap_linkor = self.pixmap_linkor.scaled(259, 110)
-        self.pixmap_kreyser = self.pixmap_kreyser.scaled(260, 110)
-        self.pixmap_esminec = self.pixmap_esminec.scaled(260, 110)
-        self.pixmap_torped = self.pixmap_torped.scaled(260, 110)
-
-        self.linkorImage.setPixmap(self.pixmap_linkor)
-        self.kreyserImage.setPixmap(self.pixmap_kreyser)
-        self.esminecImage.setPixmap(self.pixmap_esminec)
-        self.torpedImage.setPixmap(self.pixmap_torped)
+    def is_null(self):
+        if self.countL == 0:
+            self.pixmap_linkor = QPixmap(f"images/Linkor_white.svg")
+            self.pixmap_linkor = self.pixmap_linkor.scaled(259, 110)
+            self.linkorImage.setPixmap(self.pixmap_linkor)
+        if self.countK == 0:
+            self.pixmap_kreyser = QPixmap(f"images/Kreyser_white.svg")
+            self.pixmap_kreyser = self.pixmap_kreyser.scaled(259, 110)
+            self.kreyserImage.setPixmap(self.pixmap_kreyser)
+        if self.countE == 0:
+            self.pixmap_esminec = QPixmap(f"images/Esminec_white.svg")
+            self.pixmap_esminec = self.pixmap_esminec.scaled(259, 110)
+            self.esminecImage.setPixmap(self.pixmap_esminec)
+        if self.countT == 0:
+            self.pixmap_torped = QPixmap(f"images/Torped_white.svg")
+            self.pixmap_torped = self.pixmap_torped.scaled(259, 110)
+            self.torpedImage.setPixmap(self.pixmap_torped)
 
     def start(self):
         """Если Игрок1 нажал кнопку,
         то Игрок2 начинает заполнять данные.
         Иначе начинает игру"""
         # Проверка, все ли корабли поставлены
-        if self.countL != 0 or self.countK != 0 or self.countE != 0 or self.countT != 0:
+        if any(self.count.values()):
             self.error("Вы не поставили все корабли")
             return
         if self.sender().text() == 'Я  готов':
             self.new_db("Player1")
-            players.append(Player('Player1', self.boardMap))  # Добавление в список игрока
+            players.append(Player('Player1', self.boardMap, self.ships))  # Добавление в список игрока
+            players
+            self.new_images('red')
             self.readyButton.setText("Я готов")
             self.playerLabel.setText("Игрок 2")
             self.new_count()  # Обновление переменных-счётчиков
             self.new_map()  # Обновление карты
-            self.new_images('red')  # Обновление изображений
+
 
 
         else:
             self.new_db("Player2")
-            players.append(Player('Player2', self.boardMap))  # Добавление в список игрока
+            players.append(Player('Player2', self.boardMap, self.ships))  # Добавление в список игрока
             windows.setCurrentIndex(4)
 
     def new_count(self):  # Создание(обновление) переменных-счётчиков
-        self.countL = 1
-        self.countK = 2
-        self.countE = 3
-        self.countT = 4
-        self.linkorButton.setToolTip(f"{self.countL} left")
-        self.kreyserButton.setToolTip(f"{self.countK} left")
-        self.esminecButton.setToolTip(f"{self.countE} left")
-        self.torpedButton.setToolTip(f"{self.countT} left")
+        self.count = { 'L': 1, 'K': 2, 'E': 3, 'T': 4}
+        self.ships = { 'L': [], 'K': [], 'E': [], 'T': []}
+        for who in "TEKL":
+            {'L': self.linkorButton,
+             'K': self.kreyserButton,
+             'E': self.esminecButton,
+             'T': self.torpedButton}[who].setToolTip(f"{self.count[who]} left")
 
     def coords_is_right(self, new_coords, num, mode='dual'):
         # проверка на правильность введённых координат
@@ -458,154 +371,111 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
         return (str(self.boardMap.item(c1, c2 + i).text()) == "*" or
                 str(self.boardMap.item(c1, c2 + i).text()) == "X")
 
-    def error(self, text="Вы неправильно ввели координаты."):  # Вызов ошибки
+    def error(self, text="Недопустимый размер или форма корабля."):  # Вызов ошибки
         QMessageBox.critical(self, 'Ошибка!', text)
 
-    def setShip(self, coords, num, who):  # Создание любого корабля на поле
+    def setShipByType(self, coords, num, who):  # Создание любого корабля на поле
         error = False
         new_coords = coords.split('-')
         if self.coords_is_right(new_coords, num):
-            if self.coords_is_right(new_coords, num, 'v'):
-                vertical = True
-            else:
-                vertical = False
+            vertical = self.coords_is_right(new_coords, num, 'v')
             c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
             for i in range(num + 1):
+                if self.check(c1, c2, i, 1 if vertical else 2):
+                    self.error("Сюда нельзя поставить корабль")
+                    return
+            coords_as_num = []
+            for i in range(num + 1):
                 if not vertical:
-                    if self.check(c1, c2, i, 2):
-                        error = True
-                        self.error()
-                        break
                     self.boardMap.setItem(c1, c2 + i, new_cell_x())
+                    coords_as_num.append((c1, c2 + i))
                     if i == num:
                         self.map.shoot(c1, c2 + i, "sink")
                 else:
-                    if self.check(c1, c2, i, 1):
-                        error = True
-                        self.error()
-                        break
                     self.boardMap.setItem(c1 + i, c2, new_cell_x())
+                    coords_as_num.append((c1 + i, c2))
                     if i == num:
                         self.map.shoot(c1 + i, c2, 'sink')
-            if not error:
-                if who == "L":
-                    self.countL -= 1
-                    self.linkorButton.setToolTip(f"{self.countL} left")
-                elif who == "K":
-                    self.countK -= 1
-                    self.kreyserButton.setToolTip(f"{self.countK} left")
-                elif who == "E":
-                    self.countE -= 1
-                    self.esminecButton.setToolTip(f"{self.countE} left")
+            self.count[who] -= 1
+            self.ships[who].append([coords_as_num, {'L': 4, 'K': 3, 'E': 2, 'T': 1}[who]])
+            {'L': self.linkorButton,
+             'K': self.kreyserButton,
+             'E': self.esminecButton,
+             'T': self.torpedButton}[who].setToolTip(f"{self.count[who]} left")
+
         else:
             self.error()
-        self.is_null()
 
-    def is_null(self):
-        if self.countL == 0:
-            self.pixmap_linkor = QPixmap(f"images/Linkor_white.svg")
-            self.pixmap_linkor = self.pixmap_linkor.scaled(259, 110)
-            self.linkorImage.setPixmap(self.pixmap_linkor)
-        if self.countK == 0:
-            self.pixmap_kreyser = QPixmap(f"images/Kreyser_white.svg")
-            self.pixmap_kreyser = self.pixmap_kreyser.scaled(259, 110)
-            self.kreyserImage.setPixmap(self.pixmap_kreyser)
-        if self.countE == 0:
-            self.pixmap_esminec = QPixmap(f"images/Esminec_white.svg")
-            self.pixmap_esminec = self.pixmap_esminec.scaled(259, 110)
-            self.esminecImage.setPixmap(self.pixmap_esminec)
-        if self.countT == 0:
-            self.pixmap_torped = QPixmap(f"images/Torped_white.svg")
-            self.pixmap_torped = self.pixmap_torped.scaled(259, 110)
-            self.torpedImage.setPixmap(self.pixmap_torped)
 
-    def setLinkor(self):  # Создание Линкора
-        if self.countL == 0:
-            self.error("Все корабли поставлены")
-            return
-        coords, ok = QInputDialog.getText(self, f'Линкор', 'Введите координаты для Линкора:\n'
-                                                                       'Например: A1-D1')
-        if ok and self.countL != 0:
+
+    def setShip(self):  # Создание корабля
+        items = sorted(["ABCDEFGHIJ"[item.column()]+str(item.row()+1) for item in self.boardMap.selectedItems()], key=natural_key)
+        n = len(items)
+        if n == 1:
+            if self.count[' TEKL'[n]] == 0:
+                self.error("Все корабли этого типа поставлены")
+                return
             try:
-                self.setShip(coords, 3, "L")
+                self.setShipByType(f"{items[0]}-{items[-1]}", n-1, " TEKL"[n])
             except BaseException:
                 self.error()
+        else:
+            self.error()
 
-    def setKreyser(self):  # Создание Крейсера
-        if self.countK == 0:
-            self.error("Все корабли поставлены")
-            return
-        coords, ok = QInputDialog.getText(self, f'Крейсер', 'Введите координаты для Крейсера:\n'
-                                                                       'Например: A3-C3')
-        if ok and self.countK != 0:
+    def setShip2(self):  # Создание корабля
+        items = sorted(["ABCDEFGHIJ"[item.column()]+str(item.row()+1) for item in self.boardMap.selectedItems()], key=natural_key)
+        n = len(items)
+        if n == 2:
+            if self.count[' TEKL'[n]] == 0:
+                self.error("Все корабли этого типа поставлены")
+                return
             try:
-                self.setShip(coords, 2, "K")
+                self.setShipByType(f"{items[0]}-{items[-1]}", n-1, " TEKL"[n])
             except BaseException:
                 self.error()
+        else:
+            self.error()
 
-    def setEsminec(self):  # Создание Эсминца
-        if self.countE == 0:
-            self.error("Все корабли поставлены")
-            return
-        coords, ok = QInputDialog.getText(self, f'Эсминец', 'Введите координаты для Эсминца:\n'
-                                                                       'Например: A5-B5')
-        if ok and self.countE != 0:
+    def setShip3(self):  # Создание корабля
+        items = sorted(["ABCDEFGHIJ"[item.column()]+str(item.row()+1) for item in self.boardMap.selectedItems()], key=natural_key)
+        n = len(items)
+        if n == 3:
+            if self.count[' TEKL'[n]] == 0:
+                self.error("Все корабли этого типа поставлены")
+                return
             try:
-                self.setShip(coords, 1, "E")
+                self.setShipByType(f"{items[0]}-{items[-1]}", n-1, " TEKL"[n])
             except BaseException:
                 self.error()
+        else:
+            self.error()
 
-    def setTorped(self):  # Создание торпедной лодки
-        if self.countT == 0:
-            self.error("Все корабли поставлены")
-            return
-        coord, ok = QInputDialog.getText(self, f'Торпеда', 'Введите координаты для Торпеды:\n'
-                                                                      'Например: A7')
-        if ok and self.countT != 0:
+    def setShip4(self):  # Создание корабля
+        items = sorted(["ABCDEFGHIJ"[item.column()]+str(item.row()+1) for item in self.boardMap.selectedItems()], key=natural_key)
+        n = len(items)
+        if n == 4:
+            if self.count[' TEKL'[n]] == 0:
+                self.error("Все корабли этого типа поставлены")
+                return
             try:
-                if str(self.boardMap.item(*COORDS[coord.upper()]).text()) == ".":
-                    self.boardMap.setItem(*COORDS[coord.upper()], new_cell_x())
-                    self.map.shoot(*COORDS[coord.upper()], 'sink')
-                    self.countT -= 1
-                    self.torpedButton.setToolTip(f"{self.countT} left")
-                else:
-                    self.error()
-                self.is_null()
+                self.setShipByType(f"{items[0]}-{items[-1]}", n-1, " TEKL"[n])
             except BaseException:
                 self.error()
+        else:
+            self.error()
 
 
 class PVPMain(QMainWindow, Ui_MainWindow_pvp):
     def __init__(self, parent=None):
         super(PVPMain, self).__init__(parent)
         self.setupUi(self)
-        self.pixmap_your_green = QPixmap("images/your_board_green.svg")
-        self.pixmap_your_red = QPixmap("images/your_board_red.svg")
-        self.pixmap_enemy_green = QPixmap("images/enemys_board_green.svg")
-        self.pixmap_enemy_red = QPixmap("images/enemys_board_red.svg")
-        self.pixmap_vs = QPixmap("images/vs.svg")
-        self.pixmap_linkor_red = QPixmap(f"images/Linkor_red.svg")
-        self.pixmap_kreyser_red = QPixmap(f"images/Kreyser_red.svg")
-        self.pixmap_esminec_red = QPixmap(f"images/Esminec_red.svg")
-        self.pixmap_torped_red = QPixmap(f"images/Torped_red.svg")
-        self.pixmap_linkor_green = QPixmap(f"images/Linkor_green.svg")
-        self.pixmap_kreyser_green = QPixmap(f"images/Kreyser_green.svg")
-        self.pixmap_esminec_green = QPixmap(f"images/Esminec_green.svg")
-        self.pixmap_torped_green = QPixmap(f"images/Torped_green.svg")
-        self.pixmap_linkor_green = self.pixmap_linkor_green.scaled(60, 30)
-        self.pixmap_kreyser_green = self.pixmap_kreyser_green.scaled(60, 30)
-        self.pixmap_esminec_green = self.pixmap_esminec_green.scaled(60, 30)
-        self.pixmap_torped_green = self.pixmap_torped_green.scaled(60, 30)
-        self.pixmap_linkor_red = self.pixmap_linkor_red.scaled(60, 30)
-        self.pixmap_kreyser_red = self.pixmap_kreyser_red.scaled(60, 30)
-        self.pixmap_esminec_red = self.pixmap_esminec_red.scaled(60, 30)
-        self.pixmap_torped_red = self.pixmap_torped_red.scaled(60, 30)
+
 
         self.turn = "Игрок1"  # Очередь первого игрока
 
-
-        self.map1 = SeaMap(self.tableWidget)
-        self.map2 = SeaMap(self.tableWidget_2)
+        self.map = []
+        self.map.append(SeaMap(self.tableWidget))
+        self.map.append(SeaMap(self.tableWidget_2))
 
         self.new_boards()  # Создание игрового поля
 
@@ -615,23 +485,11 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         self.tableWidget.cellClicked[int, int].connect(self.course1)
         self.tableWidget_2.cellClicked[int, int].connect(self.course2)
 
-        self.board1Label.setPixmap(self.pixmap_your_green)
-        self.board2Label.setPixmap(self.pixmap_enemy_red)
+
         self.board1Label.setText("Игрок 1")
         self.board2Label.setText("Игрок 2")
         self.board1Label.setStyleSheet("background-color: #B22222")
         self.board2Label.setStyleSheet("background-color: #1E90FF")
-
-        self.vsLable.setPixmap(self.pixmap_vs)
-
-        self.linkorP1.setPixmap(self.pixmap_linkor_green)
-        self.kreyserP1.setPixmap(self.pixmap_kreyser_green)
-        self.esminecP1.setPixmap(self.pixmap_esminec_green)
-        self.torpedP1.setPixmap(self.pixmap_torped_green)
-        self.linkorP2.setPixmap(self.pixmap_linkor_red)
-        self.kreyserP2.setPixmap(self.pixmap_kreyser_red)
-        self.esminecP2.setPixmap(self.pixmap_esminec_red)
-        self.torpedP2.setPixmap(self.pixmap_torped_red)
 
 
         self.tableWidget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
@@ -657,26 +515,18 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
 
     def change_of_course(self):  # Смена хода
         if self.turn == "Игрок1":
-            self.board1Label.setPixmap(self.pixmap_enemy_green)
-            self.board2Label.setPixmap(self.pixmap_your_red)
             self.turn = "Игрок2"
-            self.board1Label.setText("Игрок 1")
-            self.board2Label.setText("Игрок 2")
-            self.board1Label.setStyleSheet("background-color: #B22222")
-            self.board2Label.setStyleSheet("background-color: #1E90FF")
+            self.board2Label.setStyleSheet("background-color: #B22222")
+            self.board1Label.setStyleSheet("background-color: #1E90FF")
             players[0], players[1] = players[1], players[0]
         elif self.turn == "Игрок2":
-            self.board1Label.setPixmap(self.pixmap_your_green)
-            self.board2Label.setPixmap(self.pixmap_enemy_red)
             self.turn = "Игрок1"
-            self.board1Label.setText("Игрок 1")
-            self.board2Label.setText("Игрок 2")
             self.board1Label.setStyleSheet("background-color: #B22222")
             self.board2Label.setStyleSheet("background-color: #1E90FF")
             players[0], players[1] = players[1], players[0]
 
 
-    def info(self, text="Координаты правельные"):  # Информационное табло
+    def info(self, text="Координаты правильные"):  # Информационное табло
         QMessageBox.information(self, "INFO", text)
 
     def error(self, text="Вы уже стреляли в эту клетку."):  # Вызов ошибки
@@ -712,30 +562,18 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
 
         if flag:
             if self.dot_or_notdot((r, c)):
-                if any(self.hasOne((r, c), shift)
-                       for shift in ((1, 0), (-1, 0), (0, 1), (0, -1))):
-                    self.info("Попадание!")
-                    if self.turn[-1] == '1':
-                        self.map2.shoot(r, c, 'hit')
-                    else:
-                        self.map1.shoot(r, c, 'hit') 
-                    players[1].board[r][c] = 0
+                dead = self.shootAndCheckIfShipIsDead((r, c))
+                what = 'sink' if dead else  'hit'
+                pl = 1 if self.turn[-1] == '1' else 0
+                self.map[pl].shoot(r, c, what)
+                players[1].board[r][c] = 0
+                self.info("Корабль потоплен!" if dead else "Попадание!")
 
-                else:
-                    self.info("Корабль потоплен!")
-                    if self.turn[-1] == '1':
-                        self.map2.shoot(r, c, 'sink')
-                    else:
-                        self.map1.shoot(r, c, 'sink')
-                    players[1].board[r][c] = 0
-
-                    self.check()
+                self.check()
             else:
+                pl = 1 if self.turn[-1] == '1' else 0
+                self.map[pl].shoot(r, c, 'miss')
                 self.info("Промах!")
-                if self.turn[-1] == '1':
-                    self.map2.shoot(r, c, 'miss')
-                else:
-                    self.map1.shoot(r, c, 'miss')
 
                 self.change_of_course()
         else:
@@ -756,18 +594,17 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
             return False
         return True
 
-    def hasOne(self, pos, shift):  # Проверка, потопил или ранил
+    def shootAndCheckIfShipIsDead(self, pos):  # Стреляем по кораблю и проверяем, потопил или ранил
         x, y = pos
-        dx, dy = shift
-        x += dx
-        y += dy
         if 0 <= x < 10 and 0 <= y < 10:
             if players[1].board[x][y] == 1:
-                if players[1].board[x-1][y-1] == 0:
-                    if players[1].board[x+1][y+1] == 0:
-                        if players[1].board[x-1][y] == 0:
-                            return True
+                for who in "TEKL":
+                    for ship in players[1].ships[who]:
+                        if pos in ship[0]:
+                            ship[1] -= 1
+                            return ship[1] == 0
         return False
+
 
 
 class WinMain(QMainWindow, Ui_MainWindow_win):  
@@ -788,9 +625,10 @@ class WinMain(QMainWindow, Ui_MainWindow_win):
 
 
 class Player:
-    def __init__(self, who, map):
+    def __init__(self, who, map, ships):
         self.who = who
         self.board = []
+        self.ships = ships
         for i in range(10):
             self.board.append([])
             for j in range(10):
